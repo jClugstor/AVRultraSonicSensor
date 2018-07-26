@@ -1,8 +1,7 @@
 #include <util/delay.h>
-#include <avr/io.h>3
-
-#include <avr/iom328p.h>
+#include <avr/io.h>
 #include <avr/interrupt.h>
+#include <stdint.h>
 #include "Ultrasonic.h"
 
 volatile double distanceTemp;
@@ -37,7 +36,7 @@ ISR(TIMER1_CAPT_vect){ //Interrupt when ICP detects a logic change
 double distance(void){
     double dist;
     if(pulseIsMeasured){
-         dist = (distanceTemp+(clockOverflowCounter * 65535))/58; //Distance in cm
+         dist = (distanceTemp + (clockOverflowCounter * 65535))/58; //Distance in cm
          clockOverflowCounter = 0;
          return dist;
     }
@@ -50,7 +49,7 @@ void initSensor(void){
     START_TIMER;
 }
 
-void trigger(uint8_t *port, uint8_t pin){
+void trigger(volatile uint8_t *port, uint8_t pin){
     setBit(*port,pin);
     _delay_us(10);
     clearBit(*port,pin);

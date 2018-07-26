@@ -1,17 +1,18 @@
-#include "USART/USART.h"
+#include "USART.h"
 #include "Ultrasonic.h"
+#include <stdlib.h>
 #include <stdio.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/io.h>
-#include <avr/iom328p.h>
-
+#define F_CPU 8000000UL
 int main(){
-    initUSART();
-    initSensor();
+
+    initUSART(); 
+    initSensor(); 
     while(1){
         trigger(&PORTB,2);
         _delay_ms(60);
-        printString(sprintf("%f",distance));
+        transmitByte(0b00101001 );
     }
 
 }
