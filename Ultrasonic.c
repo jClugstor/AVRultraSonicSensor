@@ -3,6 +3,7 @@
 #include <avr/interrupt.h>
 #include <stdint.h>
 #include "Ultrasonic.h"
+#include "USART.h"
 
 volatile double distanceTemp;
 volatile uint8_t edge = 1;
@@ -16,8 +17,8 @@ ISR(TIMER1_OVF_vect){ //increment a counter if the timer overflows
 }
 
 ISR(TIMER1_CAPT_vect){ //Interrupt when ICP detects a logic change
-    START_TIMER;
     if(edge == 1){
+        clockOverflowCounter = 0;
         pulseStart = ICR1;					//copy capture value
 		clearBit(TCCR1B,ICES1);			//set interrupt to trigger at low edge
 		edge = 0;	
@@ -25,22 +26,23 @@ ISR(TIMER1_CAPT_vect){ //Interrupt when ICP detects a logic change
 	}
 	else{
 		pulseEnd = ICR1;					//copy capture value
-		setBit(TCCR1B,ICES1);				//set intterupt to trigger at hight edge	
-		STOP_TIMER;
+		setBit(TCCR1B,ICES1);				//set interrupt to trigger at high edge	
 		distanceTemp = pulseEnd - pulseStart;
 		edge = 1;
         pulseIsMeasured = 1;
         RESET_TIMER;
 	}
 }
-double distance(void){
+uint16_t distance(volatile uint8_t *port, uint8_t pin){
     double dist;
+    trigger(&port, pin);
     if(pulseIsMeasured){
-         dist = (distanceTemp + (clockOverflowCounter * 65535))/58; //Distance in cm
+         dist = (int)((((distanceTemp/8) + (clockOverflowCounter * 65535))/58)); //Distance in cm
          clockOverflowCounter = 0;
          return dist;
     }
-    else{return;}
+    else{return -1;}
+    _delay_ms(60);
 }
 void initSensor(void){
     sei();
@@ -50,7 +52,10 @@ void initSensor(void){
 }
 
 void trigger(volatile uint8_t *port, uint8_t pin){
-    setBit(*port,pin);
-    _delay_us(10);
     clearBit(*port,pin);
+    _delay_us(5);
+    setBit(*port,pin);
+    _delay_us(20);
+    clearBit(*port,pin);
+    printString(" trig ");
 }

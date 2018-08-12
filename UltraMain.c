@@ -10,9 +10,8 @@ int main(){
     initUSART(); 
     initSensor(); 
     while(1){
-        trigger(&PORTB,2);
-        _delay_ms(60);
-        transmitByte(0b00101001 );
+        printWord(distance(&PORTB,2));
+        printString("   ");
     }
 
 }

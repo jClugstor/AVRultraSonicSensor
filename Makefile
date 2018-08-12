@@ -22,7 +22,7 @@ LIBDIR = ../../AVR-Programming-Library
 
 PROGRAMMER_TYPE = usbasp
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
-PROGRAMMER_ARGS = -b 9600 -B 8.0 -v -P usb
+PROGRAMMER_ARGS = -b 9600 -B 1.0 -v -P /dev/ttyUSB0
 
 ##########------------------------------------------------------##########
 ##########                  Program Locations                   ##########

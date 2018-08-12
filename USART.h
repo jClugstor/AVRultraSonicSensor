@@ -3,7 +3,8 @@
    initUSART requires BAUD to be defined in order to calculate
      the bit-rate multiplier.
  */
-#include <stdint.h> 
+#include <stdio.h>
+
 #ifndef BAUD                          /* if not defined in Makefile... */
 #define BAUD  9600                     /* set a safe default baud rate */
 #endif

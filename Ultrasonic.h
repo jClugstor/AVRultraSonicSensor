@@ -9,4 +9,4 @@
 
 void initSensor(void);
 void trigger(volatile uint8_t *port, uint8_t bit);
-double distance(void);
+uint16_t distance(volatile uint8_t *port, uint8_t bit);

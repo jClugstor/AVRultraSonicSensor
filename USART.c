@@ -15,7 +15,6 @@
     These old chips don't specify UDR0 vs UDR1.
     Correspondingly, the macros will just be defined as UDR.
 */
-
 #include <avr/io.h>
 #include "USART.h"
 #include <util/setbaud.h>
